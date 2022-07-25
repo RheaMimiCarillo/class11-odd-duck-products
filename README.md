@@ -1,1 +1,3 @@
-# class11-odd-duck-products
+# Class 11: Odd Duck Products
+
+## Author: Rhea Mimi Carillo
