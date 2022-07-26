@@ -13,16 +13,28 @@ let totalClicks = 0;
 // use include function later
 let allProducts = [];
 
+// array to store the index of products
+let indexArray = [];
+
 // windows into the DOM
 let myContainer = document.getElementById('images');
 // '+' selects siblings
 let myButton = document.querySelector('section + div');
 let resultsList = document.querySelector('ul');
 
+
+
 // grab image elements
 let leftImage = document.getElementById('leftImage');
 let centerImage = document.getElementById('centerImage');
 let rightImage = document.getElementById('rightImage');
+
+// todo: put images into an array
+let imageArray = [
+  leftImage,
+  centerImage,
+  rightImage
+];
 
 // CONSTRUCTOR:
 // constructor to instantiate products with images and voting statistics
@@ -54,7 +66,8 @@ function getRandomProduct()
 // will display images to the user of odd products
 function renderProducts()
 {
-  // get 3 random nummbers for goat array
+  /*
+  // get 3 random numbers for goat array
   let odd1 = getRandomProduct();
   let odd2 = getRandomProduct();
   let odd3 = getRandomProduct();
@@ -69,7 +82,40 @@ function renderProducts()
   {
     odd3 = getRandomProduct();
   }
+ */
 
+  // fill the indexArray with 6 random numbers
+  while (indexArray.length < 6)
+  {
+    // get a random number
+    let randNum = getRandomProduct();
+
+    // if the number isn't in the array, yet
+    if(!indexArray.includes(randNum))
+    {
+      // push it into the array
+      indexArray.push(randNum);
+    }
+
+    // push the unique number into the array
+  }
+
+  //
+  for(let i = 0; i < imageArray.length; i++)
+  {
+    let oddDuckNum = indexArray.shift(i);
+    changeSrc(i, oddDuckNum);
+  }
+
+  // change src, alt, and timesViewed property of the product at i
+  function changeSrc(i, oddDuckNum)
+  {
+    imageArray[i].src = allProducts[oddDuckNum].src;
+    imageArray[i].alt = allProducts[oddDuckNum].alt;
+    allProducts[i].timesViewed++;
+  }
+  /*
+  // todo: make a function to set names and such of odd products and increment the timesViewed counter
   // todo: add code to link img src to odd 1, 2 and 3
   leftImage.src = allProducts[odd1].src;
   leftImage.alt = allProducts[odd1].name;
@@ -83,8 +129,8 @@ function renderProducts()
   rightImage.src = allProducts[odd3].src;
   rightImage.alt = allProducts[odd3].name;
   allProducts[odd3].timesViewed++;
+  */
 }
-
 
 // one event handler function doing multiple things
 function handleProductClick(event)
@@ -100,20 +146,19 @@ function handleProductClick(event)
     if (clickedProduct === allProducts[i].name)
     {
       // if the name of the product clicked is the same as the name of the product in this index of the array
-      allProducts.timesClicked++;
+      allProducts[i].timesClicked++;
       // break, because we don't have to check the rest of the array
       break;
     }
   }
-
-
 
   if (totalClicks === clicksAllowed)
   {
     // if times user has clicked an image equals the limit of clicks allowed
 
     // change myButton's class name to clicks-allowed
-    myButton.className = 'clicks-allowed';
+    // myButton.className = 'clicks-allowed';
+    myButton.setAttribute('class', 'clicks-allowed');
 
     // remove the click event listener from myContainer
     myContainer.removeEventListener('click', handleProductClick);
@@ -121,6 +166,8 @@ function handleProductClick(event)
     // add new event listener to myButton
     myButton.addEventListener('click', handleResultsButtonClick);
   }
+
+  // display 3 new products
   renderProducts();
 }
 
