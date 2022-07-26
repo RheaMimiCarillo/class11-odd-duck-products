@@ -18,11 +18,6 @@ let indexArray = [];
 
 // windows into the DOM
 let myContainer = document.getElementById('images');
-// '+' selects siblings
-let myButton = document.querySelector('section + div');
-let resultsList = document.querySelector('ul');
-
-
 
 // grab image elements
 let leftImage = document.getElementById('leftImage');
@@ -35,62 +30,6 @@ let imageArray = [
   centerImage,
   rightImage
 ];
-
-// CHART.JS
-
-// make 3 arrays for user click data
-let productNames=[];
-let productViews=[];
-let productClicks=[];
-
-function renderChart()
-{
-  for (let i = 0; i < allProducts.length; i++)
-  {
-    productNames.push(allProducts[i].name);
-    productViews.push(allProducts[i].timesViewed);
-    productClicks.push(allProducts[i].timesClicked);
-  }
-
-  /*
-  const data
-  {
-    const datasets
-    {
-
-    }
-  }
-  */
-
-  /*
-  const config =
-  {
-    // type of chart
-    type: 'bar',
-
-    // the views and click data from allProduct[]
-    data: productNames,
-
-    // color of the background of the chart
-    backgroundColor:
-    [
-      'rgba(201, 201, 207, 0.2)'
-    ],
-    options:
-    {
-      scales:
-      {
-        y:
-        {
-          beginAtZero: true
-        }
-      }
-    },
-  };
-  */
-}
-
-
 
 // CONSTRUCTOR:
 // constructor to instantiate products with images and voting statistics
@@ -122,24 +61,6 @@ function getRandomProduct()
 // will display images to the user of odd products
 function renderProducts()
 {
-  /*
-  // get 3 random numbers for goat array
-  let odd1 = getRandomProduct();
-  let odd2 = getRandomProduct();
-  let odd3 = getRandomProduct();
-
-  // loop to make sure duplicates of products don't appear in a single round
-  // todo: make this condition encompass all three products
-  while (odd1 === odd2)
-  {
-    odd2 = getRandomProduct();
-  }
-  while (odd3 === odd1 || odd3 === odd2)
-  {
-    odd3 = getRandomProduct();
-  }
- */
-
   // fill the indexArray with 6 random numbers
   while (indexArray.length < 6)
   {
@@ -149,14 +70,29 @@ function renderProducts()
     // if the number isn't in the array, yet
     if(!indexArray.includes(randNum))
     {
-      // push it into the array
+      // push random number into the array
       indexArray.push(randNum);
     }
-
-    // push the unique number into the array
   }
 
-  //
+  // let odd1 = indexArray.shift();
+  // let odd2 = indexArray.shift();
+  // let odd3 = indexArray.shift();
+
+  // leftImage.src = allProducts[odd1].src;
+  // leftImage.alt = allProducts[odd1].name;
+  // allProducts[odd1].timesViewed++;
+
+  // centerImage.src = allProducts[odd2].src;
+  // centerImage.alt = allProducts[odd2].name;
+  // allProducts[odd2].timesViewed++;
+
+  // rightImage.src = allProducts[odd3].src;
+  // rightImage.alt = allProducts[odd3].name;
+  // allProducts[odd3].timesViewed++;
+
+
+  // loop through the array with our 3 image elements, change alt, src, and times viewed for each
   for(let i = 0; i < imageArray.length; i++)
   {
     let oddDuckNum = indexArray.shift(i);
@@ -167,86 +103,55 @@ function renderProducts()
   function changeSrc(i, oddDuckNum)
   {
     imageArray[i].src = allProducts[oddDuckNum].src;
-    imageArray[i].alt = allProducts[oddDuckNum].alt;
-    allProducts[i].timesViewed++;
+    imageArray[i].alt = allProducts[oddDuckNum].name;
+    console.log('incrementing allProducts[]');
+    allProducts[oddDuckNum].timesViewed++;
   }
-  /*
-  // todo: make a function to set names and such of odd products and increment the timesViewed counter
-  // todo: add code to link img src to odd 1, 2 and 3
-  leftImage.src = allProducts[odd1].src;
-  leftImage.alt = allProducts[odd1].name;
-  // increment timesViewed property
-  allProducts[odd1].timesViewed++;
 
-  centerImage.src = allProducts[odd2].src;
-  centerImage.alt = allProducts[odd2].name;
-  allProducts[odd2].timesViewed++;
-
-  rightImage.src = allProducts[odd3].src;
-  rightImage.alt = allProducts[odd3].name;
-  allProducts[odd3].timesViewed++;
-  */
 }
-
 // one event handler function doing multiple things
 function handleProductClick(event)
 {
-  // increment counter for times clicked
-  totalClicks++;
-
-  // get the name of the clicked image from the alt tag of the image displayed
-  let clickedProduct = event.target.alt;
-
-  for (let i = 0; i < allProducts.length; i++)
+  if (!event.target.alt)
   {
-    if (clickedProduct === allProducts[i].name)
+    alert('Please pick a product!');
+  // increment counter each time the user votes
+  }
+  else
+  {
+    totalClicks++;
+
+    // get the alt tag of the clicked image
+    let clickedProduct = event.target.alt;
+    console.log('clicked product: ' + clickedProduct);
+
+    // traverse through allProducts[]
+    for (let i = 0; i < allProducts.length; i++)
     {
-      // if the name of the product clicked is the same as the name of the product in this index of the array
-      allProducts[i].timesClicked++;
-      // break, because we don't have to check the rest of the array
-      break;
+    // if the name of the product clicked is the same as the .name of the product in this index of the array
+      if (clickedProduct === allProducts[i].name)
+      {
+        console.log(`${clickedProduct} clicked. incrementing ${allProducts[i].name} times clicked from ${allProducts[i].timesClicked} to ${allProducts[i].timesClicked + 1}`);
+        // increment that product's timesClicked property
+        allProducts[i].timesClicked++;
+
+        // break, because we don't have to check the rest of the array
+        break;
+      }
     }
-  }
 
-  if (totalClicks === clicksAllowed)
-  {
-    // if times user has clicked an image equals the limit of clicks allowed
+    // display 3 new products to the user
+    renderProducts();
 
-    // change myButton's class name to clicks-allowed
-    // myButton.className = 'clicks-allowed';
-    myButton.setAttribute('class', 'clicks-allowed');
-
+    // if the user votes as many times as clicksAllowed
+    if (totalClicks === clicksAllowed)
+    {
     // remove the click event listener from myContainer
-    myContainer.removeEventListener('click', handleProductClick);
-
-    // render the chart
-    renderChart();
-
-    // add new event listener to myButton
-    myButton.addEventListener('click', handleResultsButtonClick);
-  }
-
-  // display 3 new products
-  renderProducts();
-}
-
-// button is only 'clickable' if the user finished 25 rounds of choosing products
-function handleResultsButtonClick()
-{
-  if (totalClicks === clicksAllowed)
-  {
-    renderResults();
-  }
-}
-
-// make the array to show stats of products chosen by user
-function renderResults()
-{
-  for (let i = 0; i < allProducts.length; i++)
-  {
-    let li = document.createElement('li');
-    li.textContent = `${allProducts[i].name} had ${allProducts[i].timesViewed} views and was clicked on ${allProducts[i].timesClicked} times.`;
-    resultsList.appendChild(li);
+      myContainer.removeEventListener('click', handleProductClick);
+      alert('Thanks for completing the survey');
+      // render the chart
+      renderChart();
+    }
   }
 }
 
@@ -297,17 +202,93 @@ allProducts.push(
   wineGlass
 );
 
-console.log(`the name of bag in product array is ${allProducts[0].name}`);
-
-
-// call renderProducts() function that will display 3 random products
-
-// write event listener for the container of my images
+// event listener for the container of my images
 // when user clicks on an image in my container, call the handleProductClick() function
-// ex.: myContainer.addEventListener('click', handleProductClick());
-
-
 renderProducts();
 
 // add click event listener to the <section> where the images will display
 myContainer.addEventListener('click', handleProductClick);
+
+
+// CHART.JS
+
+// got help with random colors: https://stackoverflow.com/a/25709983
+function getRandomColor()
+{
+  let letters = '0123456789ABCDEF'.split('');
+  let color = '#';
+  for (let i = 0; i < 6; i++ )
+  {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+function renderChart()
+{
+  // make 3 arrays for survey data
+  let productNames=[];
+  let productViews=[];
+  let productClicks=[];
+
+  for (let i = 0; i < allProducts.length; i++)
+  {
+    // push these values into the above arrays
+    productNames.push(allProducts[i].name);
+    productViews.push(allProducts[i].timesViewed);
+    productClicks.push(allProducts[i].timesClicked);
+  }
+
+  const data =
+  {
+    // x axis has the names of each product
+    labels: productNames,
+
+    // an array of objects
+    // each object will be it's own thing on the chart
+    datasets:
+    [
+      {// first set of bars
+        // the name for this metric
+        label: 'Views',
+        // the numbers
+        data: productViews,
+        // the color of the background in the chart
+        backgroundColor: getRandomColor(),
+        // the color of the borders of each bar
+        borderColor: getRandomColor(),
+        // how wide the border is
+        borderWidth: 1,
+      },
+      {// second set of bars
+        label: 'Likes',
+        data: productClicks,
+        backgroundColor: getRandomColor(),
+        borderColor: getRandomColor(),
+        borderWidth: 1,
+      }
+    ]
+  };
+
+
+  // config object with options for the chart
+  const config =
+  {
+    type: 'bar',
+    data: data,
+    options:
+    {
+      scales:
+      {
+        y:
+        {
+          beginAtZero: true
+        }
+      }
+    },
+  };
+
+  // new Chart object with parameters
+  const myChart = new Chart(document.getElementById('myChart'),config);
+
+}
