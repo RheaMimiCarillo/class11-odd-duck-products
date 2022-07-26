@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 
-/*
+
 css grid stuff to modify before using
 main {
   width: 80%;
@@ -43,5 +43,6 @@ div:nth-child(8) {
   grid-row-end: 5;
 }
 
-
-*/
+#myChart {
+  grid-column-start: 2;
+}
