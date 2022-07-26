@@ -97,15 +97,16 @@ function handleProductClick(event)
 
   for (let i = 0; i < allProducts.length; i++)
   {
-    if (clickedProduct === allProducts.name[i].name)
+    if (clickedProduct === allProducts[i].name)
     {
       // if the name of the product clicked is the same as the name of the product in this index of the array
       allProducts.timesClicked++;
+      // break, because we don't have to check the rest of the array
       break;
     }
   }
 
-  renderProducts();
+
 
   if (totalClicks === clicksAllowed)
   {
@@ -120,6 +121,7 @@ function handleProductClick(event)
     // add new event listener to myButton
     myButton.addEventListener('click', handleResultsButtonClick);
   }
+  renderProducts();
 }
 
 // button is only 'clickable' if the user finished 25 rounds of choosing products
