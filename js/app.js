@@ -36,6 +36,62 @@ let imageArray = [
   rightImage
 ];
 
+// CHART.JS
+
+// make 3 arrays for user click data
+let productNames=[];
+let productViews=[];
+let productClicks=[];
+
+function renderChart()
+{
+  for (let i = 0; i < allProducts.length; i++)
+  {
+    productNames.push(allProducts[i].name);
+    productViews.push(allProducts[i].timesViewed);
+    productClicks.push(allProducts[i].timesClicked);
+  }
+
+  /*
+  const data
+  {
+    const datasets
+    {
+
+    }
+  }
+  */
+
+  /*
+  const config =
+  {
+    // type of chart
+    type: 'bar',
+
+    // the views and click data from allProduct[]
+    data: productNames,
+
+    // color of the background of the chart
+    backgroundColor:
+    [
+      'rgba(201, 201, 207, 0.2)'
+    ],
+    options:
+    {
+      scales:
+      {
+        y:
+        {
+          beginAtZero: true
+        }
+      }
+    },
+  };
+  */
+}
+
+
+
 // CONSTRUCTOR:
 // constructor to instantiate products with images and voting statistics
 function OddProduct(name, fileExtension = 'jpg')
@@ -162,6 +218,9 @@ function handleProductClick(event)
 
     // remove the click event listener from myContainer
     myContainer.removeEventListener('click', handleProductClick);
+
+    // render the chart
+    renderChart();
 
     // add new event listener to myButton
     myButton.addEventListener('click', handleResultsButtonClick);
