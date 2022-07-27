@@ -34,7 +34,7 @@ let imageArray = [
 
 // CONSTRUCTOR:
 // constructor to instantiate products with images and voting statistics
-function OddProduct(name, fileExtension = 'jpg') {
+function OddProduct(name, fileExtension, timesClicked, timesViewed) {
   // name of the product
   this.name = name;
 
@@ -42,15 +42,97 @@ function OddProduct(name, fileExtension = 'jpg') {
   this.src = `../img/${this.name}.${fileExtension}`;
 
   // total times product has been clicked
-  this.timesClicked = 0;
+  this.timesClicked = timesClicked;
 
   // total times product has been displayed to user
-  this.timesViewed = 0;
+  this.timesViewed = timesViewed;
 }
 
 
-
 // FUNCTIONS
+
+// helper function to 1. instantiate an OddProduct and 2. push that product into the allProducts[] array
+function makeOddProduct(name, fileExtension = 'jpg', timesClicked = 0, timesViewed = 0)
+{
+  // gets name and fileExtension and passes it into constructor
+  // fileExtension defaults to be .jpg, in case no parameter is passed in
+  let anOddProduct = new OddProduct (name, fileExtension, timesClicked, timesViewed);
+
+  // pushes the product into the allProducts[] array
+  allProducts.push(anOddProduct);
+}
+
+// this function will see if there are products already stored in local storage
+function getOddProducts()
+{
+  // check if there are products in storage
+  let potentialProducts = localStorage.getItem('products');
+
+  // if there are no products in to get from potentialProducts, potentialProducts will be 'null'
+
+  // truth-y if there are orders; false-y if null
+  if(potentialProducts)
+  {
+    // revert the 'potentialProducts' string into POJO objects
+    let parsedProducts = JSON.parse(potentialProducts);
+
+    // revert the parsed objects back into OddProduct instances using the makeOddProduct() helper function
+
+    for (let product of parsedProducts)
+    {
+      // extract the properties and such from the POJOs
+      let name = product.name;
+      let fileExtension = product.fileExtension;
+      let timesClicked = product.timesClicked;
+      let timesViewed = product.timesViewed;
+      console.log(`parsed ${name}: ${product.name}`);
+      console.log(`parsed ${fileExtension}:${product.fileExtension}`);
+      console.log(`parsed ${timesClicked}:${product.timesClicked}`);
+      console.log(`parsed ${timesViewed}:${product.timesViewed}`);
+
+      // reinstantiate the OddProducts using the makeOddProduct() helper function (which'll repopulate the allProducts[] array)
+      makeOddProduct(name, fileExtension, timesClicked, timesViewed);
+    }
+  }
+  // if there are no odd products in local storage
+  else
+  {
+    // make all of these products
+    makeOddProduct('bag');
+    makeOddProduct('banana');
+    makeOddProduct('bathroom');
+    makeOddProduct('boots');
+    makeOddProduct('breakfast');
+    makeOddProduct('bubblegum');
+    makeOddProduct('chair');
+    makeOddProduct('cthulhu');
+    makeOddProduct('dog-duck');
+    makeOddProduct('dragon');
+    makeOddProduct('pen');
+    makeOddProduct('pet-sweep');
+    makeOddProduct('scissors');
+    makeOddProduct('shark');
+    makeOddProduct('sweep', 'png');
+    makeOddProduct('tauntaun');
+    makeOddProduct('unicorn');
+    makeOddProduct('water-can');
+    makeOddProduct('wine-glass');
+  }
+  // render the objects
+  renderProducts();
+}
+
+// function to store OddProducts in the allProducts[] array into localStorage
+function storeOddProducts()
+{
+  // `localStorage` needs a  `key` (label), like a box, to put things into
+  // 'products' will be the key
+  // JSON.stringify() to turn the allProducts[] array into a JSON string
+  let stringifiedProducts = JSON.stringify(allProducts);
+
+  // set (.setItem) the stringified string into localStorage
+  localStorage.setItem('products', stringifiedProducts);
+}
 
 // this function returns a random number associated with an item in the allProducts[] array
 function getRandomProduct() {
@@ -70,23 +152,6 @@ function renderProducts() {
       indexArray.push(randNum);
     }
   }
-
-  // let odd1 = indexArray.shift();
-  // let odd2 = indexArray.shift();
-  // let odd3 = indexArray.shift();
-
-  // leftImage.src = allProducts[odd1].src;
-  // leftImage.alt = allProducts[odd1].name;
-  // allProducts[odd1].timesViewed++;
-
-  // centerImage.src = allProducts[odd2].src;
-  // centerImage.alt = allProducts[odd2].name;
-  // allProducts[odd2].timesViewed++;
-
-  // rightImage.src = allProducts[odd3].src;
-  // rightImage.alt = allProducts[odd3].name;
-  // allProducts[odd3].timesViewed++;
-
 
   // loop through the array with our 3 image elements, change alt, src, and times viewed for each
   for (let i = 0; i < imageArray.length; i++) {
@@ -139,60 +204,20 @@ function handleProductClick(event) {
       alert('Thanks for completing the survey');
       // render the chart
       renderChart();
+
+      // store statistics for OddProducts into localStorage
+      storeOddProducts();
     }
   }
 }
 
 // EXECUTABLE CODE
 
-// hard coded OddProducts
-let bag = new OddProduct('bag');
-let banana = new OddProduct('banana');
-let bathroom = new OddProduct('bathroom');
-let boots = new OddProduct('boots');
-let breakfast = new OddProduct('breakfast');
-let bubblegum = new OddProduct('bubblegum');
-let chair = new OddProduct('chair');
-let cthulhu = new OddProduct('cthulhu');
-let dogDuck = new OddProduct('dog-duck');
-let dragon = new OddProduct('dragon');
-let pen = new OddProduct('pen');
-let petSweep = new OddProduct('pet-sweep');
-let scissors = new OddProduct('scissors');
-let shark = new OddProduct('shark');
-let sweep = new OddProduct('sweep', 'png');
-let tauntaun = new OddProduct('tauntaun');
-let unicorn = new OddProduct('unicorn');
-let waterCan = new OddProduct('water-can');
-let wineGlass = new OddProduct('wine-glass');
 
-
-// push all instantiated products into array
-allProducts.push(
-  bag,
-  banana,
-  bathroom,
-  boots,
-  breakfast,
-  bubblegum,
-  chair,
-  cthulhu,
-  dogDuck,
-  dragon,
-  pen,
-  petSweep,
-  scissors,
-  shark,
-  sweep,
-  tauntaun,
-  unicorn,
-  waterCan,
-  wineGlass
-);
 
 // event listener for the container of my images
 // when user clicks on an image in my container, call the handleProductClick() function
-renderProducts();
+getOddProducts();
 
 // add click event listener to the <section> where the images will display
 myContainer.addEventListener('click', handleProductClick);
@@ -278,182 +303,3 @@ function renderChart() {
   const myChart = new Chart(document.getElementById('myChart'), config);
 
 }
-
-
-/* Dropdown stuff and storing local data*/
-
-// GLOBAL VARIABLES
-// drink array
-let drinkOrder = [];
-
-// get dom elements of form and ul
-let coffeeForm = document.querySelector('form');
-let resultsList = document.querySelector('ul');
-
-// CONSTRUCTORS
-
-// make a new drink
-function Drink(name, drinkType, milk, size)
-{
-  this.name = name;
-  this.drinkType = drinkType;
-  this.milk = milk;
-  this.size = size;
-}
-
-// create a prototype function on our constructor to add LI with drink info
-
-// prototype syntax:
-// ObjectName.prototype.nameOfFunction = function()
-// {
-//   code goes here
-// }
-Drink.prototype.renderADrink = function()
-{
-  // code to make li elements to <ul>
-}
-
-// GLOBAL FUNCTIONS
-
-// helper function to make new drinks
-function makeADrink(name, drinkType, milk, size)
-{
-  // instantiate a new drink
-  let drinkObj = new Drink(name, drinkType, milk, size);
-
-  // push drink to array
-  drinkOrder.push(drinkObj);
-
-  // render list items with drink info
-  drinkObj.renderADrink();
-}
-
-
-function getDrinks()
-{
-  // check if drinks (order) is in storage
-  let potentialOrders = localStorage.getItem('orders');
-
-  // if no orders, order will be 'null'
-
-  // if there are drinks, we turn them back into objects
-  // will evaluate as a 'truthy' value in JS
-  if (potentialOrders)
-  {
-    // turn potential orders back into JS objects (POJOs)
-    let parsedOrders = JSON.parse(potentialOrders);
-    // parsed order returns an array of POJOs
-
-    // turned them back Drink objects AKA Reinstantiate
-
-
-    // declare 'order' instead of doing 'i' and stuff
-    // 'order' is the actual object we pass into the loop
-    // for of loop example:
-    for (let order of parsedOrders)
-    {
-      // makeADrink(name,drinkType,milk,size)
-
-      // extract the values from the POJOs
-      let name = order.name;
-      let drinkType = order.drinkType;
-      let milk = order.milk;
-      let size = order.size;
-
-      // pass the extracted values into our helper function that will reinstantiate the drink objects
-      makeADrink(name,drinkType,milk,size);
-    }
-  }
-
-  // if there are no drinks...:
-}
-
-// function to put drinks into local storage
-function storeDrinks()
-{
-  // KEY (label) to put things into local storage
-
-  // 'pack' items to put them into Local Storage
-  // use JSON.stringify() to turn it into a String
-  // 'orders' is they key
-
-  // stringify a copy of the drinkOrder array into a JSON string
-  let stringifiedOrders = JSON.stringify(drinkOrder);
-
-
-  // 'pack' (set) orders into localStorage
-  localStorage.setItem('orders', stringifiedOrders);
-}
-
-// EVENT HANDLER
-
-function handleSubmitForm(event)
-{
-  event.preventDefault();
-
-  // get customer's name from text input
-  let customerName = event.target.name.value;
-
-  // get customer's drink size from dropdown menu
-  let drinkType = event.target.drinkType.value;
-
-  // user input to make a drink object
-  makeADrink(customerName, drinkType);
-}
-
-// EXECUTABLE CODE
-coffeeForm.addEventListener('submit', handleSubmitForm);
-
-
-// LOCAL STORAGE
-// make coffee order persist
-// goal: if there are drink orders stored, load those drinks. if not, load the page to input drinks
-// in odd ducks: products will be stored
-/* timeline:
-
-  > user goes to the page
-
-  > check local storage for products
-    > (look for 'box' labeled "products" (-getItem()))
-    > if there are no products, generate products
-      > create new products
-    > if there are products: load those products
-      > unpack them > put them into product array
-    > alternatively, delete the old products from local storage
-      > delete old products, generate new products
-
-  > user reloads page
-    > The products are generated again! (oh no!)
-    > to avoid this
-
-  > user votes
-
-  > render results
-
-  > repack our localStorage box and add label tot he box "products"
-  > put it into storage (.set(item))
-*/
-
-// JSON
-/*
-  JSON is always in caps!
-
-  How to 'pack' items into LocalStorage:
-    JSON.stringify();
-      - turn JS into a JSON and then a String of JSON
-
-  How to 'unpack' items we retrieve from LocalStorage
-    JSON.parse();
-      - revert a JSON string back into JS
-      - by itself, .parse() will parse into POJOs
-        - to avoid this problem, we'll reinstantiate our parsed object
-
-POJO = Plain Old JavaScript Object
-
-reinstantiation:
-  - turn revert parsed string into an instance of the object
-
-  ODD DUCK NOTEs!
-  - look out for that one object that is a .png and how it plays with reinstantiating....?
-  - find a way to clear views and votes for objects from old sessions on page reload
-*/
