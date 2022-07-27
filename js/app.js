@@ -14,6 +14,7 @@ let totalClicks = 0;
 let allProducts = [];
 
 // array to store the index of products
+// it's a "queue"
 let indexArray = [];
 
 // windows into the DOM
@@ -58,7 +59,7 @@ function getRandomProduct() {
 
 // will display images to the user of odd products
 function renderProducts() {
-  // fill the indexArray with 6 random numbers
+  // fill the indexArray with 6 random numbers in a queue
   while (indexArray.length < 6) {
     // get a random number
     let randNum = getRandomProduct();
