@@ -33,8 +33,7 @@ let imageArray = [
 
 // CONSTRUCTOR:
 // constructor to instantiate products with images and voting statistics
-function OddProduct(name, fileExtension = 'jpg')
-{
+function OddProduct(name, fileExtension = 'jpg') {
   // name of the product
   this.name = name;
 
@@ -53,23 +52,19 @@ function OddProduct(name, fileExtension = 'jpg')
 // FUNCTIONS
 
 // this function returns a random number associated with an item in the allProducts[] array
-function getRandomProduct()
-{
+function getRandomProduct() {
   return Math.floor(Math.random() * allProducts.length);
 }
 
 // will display images to the user of odd products
-function renderProducts()
-{
+function renderProducts() {
   // fill the indexArray with 6 random numbers
-  while (indexArray.length < 6)
-  {
+  while (indexArray.length < 6) {
     // get a random number
     let randNum = getRandomProduct();
 
     // if the number isn't in the array, yet
-    if(!indexArray.includes(randNum))
-    {
+    if (!indexArray.includes(randNum)) {
       // push random number into the array
       indexArray.push(randNum);
     }
@@ -93,32 +88,27 @@ function renderProducts()
 
 
   // loop through the array with our 3 image elements, change alt, src, and times viewed for each
-  for(let i = 0; i < imageArray.length; i++)
-  {
+  for (let i = 0; i < imageArray.length; i++) {
     let oddDuckNum = indexArray.shift(i);
     changeSrc(i, oddDuckNum);
   }
 
-  // change src, alt, and timesViewed property of the product at i
-  function changeSrc(i, oddDuckNum)
-  {
-    imageArray[i].src = allProducts[oddDuckNum].src;
-    imageArray[i].alt = allProducts[oddDuckNum].name;
+  // change src, alt, and timesViewed property of the product at idx
+  function changeSrc(idx, oddDuckNum) {
+    imageArray[idx].src = allProducts[oddDuckNum].src;
+    imageArray[idx].alt = allProducts[oddDuckNum].name;
     console.log('incrementing allProducts[]');
     allProducts[oddDuckNum].timesViewed++;
   }
 
 }
 // one event handler function doing multiple things
-function handleProductClick(event)
-{
-  if (!event.target.alt)
-  {
+function handleProductClick(event) {
+  if (!event.target.alt) {
     alert('Please pick a product!');
-  // increment counter each time the user votes
+    // increment counter each time the user votes
   }
-  else
-  {
+  else {
     totalClicks++;
 
     // get the alt tag of the clicked image
@@ -126,11 +116,9 @@ function handleProductClick(event)
     console.log('clicked product: ' + clickedProduct);
 
     // traverse through allProducts[]
-    for (let i = 0; i < allProducts.length; i++)
-    {
-    // if the name of the product clicked is the same as the .name of the product in this index of the array
-      if (clickedProduct === allProducts[i].name)
-      {
+    for (let i = 0; i < allProducts.length; i++) {
+      // if the name of the product clicked is the same as the .name of the product in this index of the array
+      if (clickedProduct === allProducts[i].name) {
         console.log(`${clickedProduct} clicked. incrementing ${allProducts[i].name} times clicked from ${allProducts[i].timesClicked} to ${allProducts[i].timesClicked + 1}`);
         // increment that product's timesClicked property
         allProducts[i].timesClicked++;
@@ -144,9 +132,8 @@ function handleProductClick(event)
     renderProducts();
 
     // if the user votes as many times as clicksAllowed
-    if (totalClicks === clicksAllowed)
-    {
-    // remove the click event listener from myContainer
+    if (totalClicks === clicksAllowed) {
+      // remove the click event listener from myContainer
       myContainer.removeEventListener('click', handleProductClick);
       alert('Thanks for completing the survey');
       // render the chart
@@ -167,8 +154,8 @@ let bubblegum = new OddProduct('bubblegum');
 let chair = new OddProduct('chair');
 let cthulhu = new OddProduct('cthulhu');
 let dogDuck = new OddProduct('dog-duck');
-let dragon = new OddProduct ('dragon');
-let pen = new OddProduct ('pen');
+let dragon = new OddProduct('dragon');
+let pen = new OddProduct('pen');
 let petSweep = new OddProduct('pet-sweep');
 let scissors = new OddProduct('scissors');
 let shark = new OddProduct('shark');
@@ -213,26 +200,22 @@ myContainer.addEventListener('click', handleProductClick);
 // CHART.JS
 
 // got help with random colors: https://stackoverflow.com/a/25709983
-function getRandomColor()
-{
+function getRandomColor() {
   let letters = '0123456789ABCDEF'.split('');
   let color = '#';
-  for (let i = 0; i < 6; i++ )
-  {
+  for (let i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
 }
 
-function renderChart()
-{
+function renderChart() {
   // make 3 arrays for survey data
-  let productNames=[];
-  let productViews=[];
-  let productClicks=[];
+  let productNames = [];
+  let productViews = [];
+  let productClicks = [];
 
-  for (let i = 0; i < allProducts.length; i++)
-  {
+  for (let i = 0; i < allProducts.length; i++) {
     // push these values into the above arrays
     productNames.push(allProducts[i].name);
     productViews.push(allProducts[i].timesViewed);
@@ -247,28 +230,28 @@ function renderChart()
     // an array of objects
     // each object will be it's own thing on the chart
     datasets:
-    [
-      {// first set of bars
-        // the name for this metric
-        label: 'Views',
-        // the numbers
-        data: productViews,
-        // the color of the background in the chart
-        backgroundColor: getRandomColor(),
-        // the color of the borders of each bar
-        // the border of each bar will refresh with a new color upon hover
-        borderColor: getRandomColor,
-        // how wide the border is
-        borderWidth: 1,
-      },
-      {// second set of bars
-        label: 'Likes',
-        data: productClicks,
-        backgroundColor: getRandomColor(),
-        borderColor: getRandomColor,
-        borderWidth: 1,
-      }
-    ]
+      [
+        {// first set of bars
+          // the name for this metric
+          label: 'Views',
+          // the numbers
+          data: productViews,
+          // the color of the background in the chart
+          backgroundColor: getRandomColor(),
+          // the color of the borders of each bar
+          // the border of each bar will refresh with a new color upon hover
+          borderColor: getRandomColor,
+          // how wide the border is
+          borderWidth: 1,
+        },
+        {// second set of bars
+          label: 'Likes',
+          data: productClicks,
+          backgroundColor: getRandomColor(),
+          borderColor: getRandomColor,
+          borderWidth: 1,
+        }
+      ]
   };
 
 
@@ -290,6 +273,7 @@ function renderChart()
   };
 
   // new Chart object with parameters
-  const myChart = new Chart(document.getElementById('myChart'),config);
+  // eslint-disable-next-line no-unused-vars, no-undef
+  const myChart = new Chart(document.getElementById('myChart'), config);
 
 }
