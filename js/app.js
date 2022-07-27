@@ -34,7 +34,7 @@ let imageArray = [
 
 // CONSTRUCTOR:
 // constructor to instantiate products with images and voting statistics
-function OddProduct(name, fileExtension) {
+function OddProduct(name, fileExtension, timesClicked, timesViewed) {
   // name of the product
   this.name = name;
 
@@ -42,23 +42,21 @@ function OddProduct(name, fileExtension) {
   this.src = `../img/${this.name}.${fileExtension}`;
 
   // total times product has been clicked
-  this.timesClicked = 0;
+  this.timesClicked = timesClicked;
 
   // total times product has been displayed to user
-  this.timesViewed = 0;
+  this.timesViewed = timesViewed;
 }
 
 
 // FUNCTIONS
 
 // helper function to 1. instantiate an OddProduct and 2. push that product into the allProducts[] array
-function makeOddProduct(name, fileExtension = 'jpg', timesClicked = 0, timesViewed = 0,)
+function makeOddProduct(name, fileExtension = 'jpg', timesClicked = 0, timesViewed = 0)
 {
   // gets name and fileExtension and passes it into constructor
   // fileExtension defaults to be .jpg, in case no parameter is passed in
-  let anOddProduct = new OddProduct (name, fileExtension);
-
-  // we didn't pass in timesViewed or timesClicked, because we want to reset those to 0
+  let anOddProduct = new OddProduct (name, fileExtension, timesClicked, timesViewed);
 
   // pushes the product into the allProducts[] array
   allProducts.push(anOddProduct);
@@ -75,7 +73,6 @@ function getOddProducts()
   // truth-y if there are orders; false-y if null
   if(potentialProducts)
   {
-    // if true
     // revert the 'potentialProducts' string into POJO objects
     let parsedProducts = JSON.parse(potentialProducts);
 
@@ -117,6 +114,8 @@ function getOddProducts()
     makeOddProduct('water-can');
     makeOddProduct('wine-glass');
   }
+  // render the objects
+  renderProducts();
 }
 
 // function to store OddProducts in the allProducts[] array into localStorage
@@ -214,7 +213,7 @@ function handleProductClick(event) {
 
 // event listener for the container of my images
 // when user clicks on an image in my container, call the handleProductClick() function
-renderProducts();
+getOddProducts();
 
 // add click event listener to the <section> where the images will display
 myContainer.addEventListener('click', handleProductClick);
