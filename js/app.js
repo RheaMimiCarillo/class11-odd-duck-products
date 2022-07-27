@@ -82,12 +82,16 @@ function getOddProducts()
     {
       // extract the properties and such from the POJOs
       let name = product.name;
-      let src = product.src;
+      let fileExtension = product.fileExtension;
       let timesClicked = product.timesClicked;
       let timesViewed = product.timesViewed;
+      console.log(`parsed ${name}: ${product.name}`);
+      console.log(`parsed ${fileExtension}:${product.fileExtension}`);
+      console.log(`parsed ${timesClicked}:${product.timesClicked}`);
+      console.log(`parsed ${timesViewed}:${product.timesViewed}`);
 
       // reinstantiate the OddProducts using the makeOddProduct() helper function (which'll repopulate the allProducts[] array)
-      makeOddProduct(name, src, timesClicked, timesViewed);
+      makeOddProduct(name, fileExtension, timesClicked, timesViewed);
     }
   }
   // if there are no odd products in local storage
@@ -299,59 +303,3 @@ function renderChart() {
   const myChart = new Chart(document.getElementById('myChart'), config);
 
 }
-
-
-/* Dropdown stuff and storing local data*/
-
-// LOCAL STORAGE
-// make coffee order persist
-// goal: if there are drink orders stored, load those drinks. if not, load the page to input drinks
-// in odd ducks: products will be stored
-/* timeline:
-
-  > user goes to the page
-
-  > check local storage for products
-    > (look for 'box' labeled "products" (-getItem()))
-    > if there are no products, generate products
-      > create new products
-    > if there are products: load those products
-      > unpack them > put them into product array
-    > alternatively, delete the old products from local storage
-      > delete old products, generate new products
-
-  > user reloads page
-    > The products are generated again! (oh no!)
-    > to avoid this
-
-  > user votes
-
-  > render results
-
-  > repack our localStorage box and add label tot he box "products"
-  > put it into storage (.set(item))
-*/
-
-// JSON
-/*
-  JSON is always in caps!
-
-  How to 'pack' items into LocalStorage:
-    JSON.stringify();
-      - turn JS into a JSON and then a String of JSON
-
-  How to 'unpack' items we retrieve from LocalStorage
-    JSON.parse();
-      - revert a JSON string back into JS
-      - by itself, .parse() will parse into POJOs
-        - to avoid this problem, we'll reinstantiate our parsed object
-
-POJO = Plain Old JavaScript Object
-
-reinstantiation:
-  - turn revert parsed string into an instance of the object
-
-  ODD DUCK NOTEs!
-  - look out for that one object that is a .png and how it plays with reinstantiating....?
-  - find a way to clear views and votes for objects from old sessions on page reload
-*/
