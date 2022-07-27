@@ -19,10 +19,8 @@ let indexArray = [];
 // windows into the DOM
 let myContainer = document.getElementById('images');
 // '+' selects siblings
-let myButton = document.querySelector('section + div');
+let myButton = document.getElementById('resultsButton');
 let resultsList = document.querySelector('ul');
-
-
 
 // grab image elements
 let leftImage = document.getElementById('leftImage');
@@ -35,62 +33,6 @@ let imageArray = [
   centerImage,
   rightImage
 ];
-
-// CHART.JS
-
-// make 3 arrays for user click data
-let productNames=[];
-let productViews=[];
-let productClicks=[];
-
-function renderChart()
-{
-  for (let i = 0; i < allProducts.length; i++)
-  {
-    productNames.push(allProducts[i].name);
-    productViews.push(allProducts[i].timesViewed);
-    productClicks.push(allProducts[i].timesClicked);
-  }
-
-  /*
-  const data
-  {
-    const datasets
-    {
-
-    }
-  }
-  */
-
-  /*
-  const config =
-  {
-    // type of chart
-    type: 'bar',
-
-    // the views and click data from allProduct[]
-    data: productNames,
-
-    // color of the background of the chart
-    backgroundColor:
-    [
-      'rgba(201, 201, 207, 0.2)'
-    ],
-    options:
-    {
-      scales:
-      {
-        y:
-        {
-          beginAtZero: true
-        }
-      }
-    },
-  };
-  */
-}
-
-
 
 // CONSTRUCTOR:
 // constructor to instantiate products with images and voting statistics
@@ -119,27 +61,9 @@ function getRandomProduct()
   return Math.floor(Math.random() * allProducts.length);
 }
 
-// will display images to the user of odd products
+// will display images of odd products to the user
 function renderProducts()
 {
-  /*
-  // get 3 random numbers for goat array
-  let odd1 = getRandomProduct();
-  let odd2 = getRandomProduct();
-  let odd3 = getRandomProduct();
-
-  // loop to make sure duplicates of products don't appear in a single round
-  // todo: make this condition encompass all three products
-  while (odd1 === odd2)
-  {
-    odd2 = getRandomProduct();
-  }
-  while (odd3 === odd1 || odd3 === odd2)
-  {
-    odd3 = getRandomProduct();
-  }
- */
-
   // fill the indexArray with 6 random numbers
   while (indexArray.length < 6)
   {
@@ -156,7 +80,6 @@ function renderProducts()
     // push the unique number into the array
   }
 
-  //
   for(let i = 0; i < imageArray.length; i++)
   {
     let oddDuckNum = indexArray.shift(i);
@@ -167,65 +90,53 @@ function renderProducts()
   function changeSrc(i, oddDuckNum)
   {
     imageArray[i].src = allProducts[oddDuckNum].src;
-    imageArray[i].alt = allProducts[oddDuckNum].alt;
-    allProducts[i].timesViewed++;
+    imageArray[i].alt = allProducts[oddDuckNum].name;
+    allProducts[oddDuckNum].timesViewed++;
   }
-  /*
-  // todo: make a function to set names and such of odd products and increment the timesViewed counter
-  // todo: add code to link img src to odd 1, 2 and 3
-  leftImage.src = allProducts[odd1].src;
-  leftImage.alt = allProducts[odd1].name;
-  // increment timesViewed property
-  allProducts[odd1].timesViewed++;
-
-  centerImage.src = allProducts[odd2].src;
-  centerImage.alt = allProducts[odd2].name;
-  allProducts[odd2].timesViewed++;
-
-  rightImage.src = allProducts[odd3].src;
-  rightImage.alt = allProducts[odd3].name;
-  allProducts[odd3].timesViewed++;
-  */
 }
 
 // one event handler function doing multiple things
 function handleProductClick(event)
 {
-  // increment counter for times clicked
-  totalClicks++;
-
-  // get the name of the clicked image from the alt tag of the image displayed
-  let clickedProduct = event.target.alt;
-
-  for (let i = 0; i < allProducts.length; i++)
+  if (!event.target.alt)
   {
-    if (clickedProduct === allProducts[i].name)
+    alert('Please pick a product!');
+  // increment counter each time the user votes
+  }
+  else
+  {
+    totalClicks++;
+
+    // get the alt tag of the clicked image
+    let clickedProduct = event.target.alt;
+    console.log('clicked product: ' + clickedProduct);
+
+    // traverse through allProducts[]
+    for (let i = 0; i < allProducts.length; i++)
     {
-      // if the name of the product clicked is the same as the name of the product in this index of the array
-      allProducts[i].timesClicked++;
-      // break, because we don't have to check the rest of the array
-      break;
+    // if the name of the product clicked is the same as the .name of the product in this index of the array
+      if (clickedProduct === allProducts[i].name)
+      {
+        console.log(`${clickedProduct} clicked. incrementing ${allProducts[i].name} times clicked from ${allProducts[i].timesClicked} to ${allProducts[i].timesClicked + 1}`);
+        // increment that product's timesClicked property
+        allProducts[i].timesClicked++;
+
+        // break, because we don't have to check the rest of the array
+        break;
+      }
+    }
+
+    if (totalClicks === clicksAllowed)
+    {
+      // if times user has clicked an image equals the limit of clicks allowed
+      // remove the click event listener from myContainer
+      myContainer.removeEventListener('click', handleProductClick);
+      alert('Thanks for completing the survey');
+
+      // add new event listener to myButton
+      myButton.addEventListener('click', handleResultsButtonClick);
     }
   }
-
-  if (totalClicks === clicksAllowed)
-  {
-    // if times user has clicked an image equals the limit of clicks allowed
-
-    // change myButton's class name to clicks-allowed
-    // myButton.className = 'clicks-allowed';
-    myButton.setAttribute('class', 'clicks-allowed');
-
-    // remove the click event listener from myContainer
-    myContainer.removeEventListener('click', handleProductClick);
-
-    // render the chart
-    renderChart();
-
-    // add new event listener to myButton
-    myButton.addEventListener('click', handleResultsButtonClick);
-  }
-
   // display 3 new products
   renderProducts();
 }
@@ -233,10 +144,8 @@ function handleProductClick(event)
 // button is only 'clickable' if the user finished 25 rounds of choosing products
 function handleResultsButtonClick()
 {
-  if (totalClicks === clicksAllowed)
-  {
-    renderResults();
-  }
+  console.log('in handle results');
+  renderResults();
 }
 
 // make the array to show stats of products chosen by user
@@ -296,16 +205,6 @@ allProducts.push(
   waterCan,
   wineGlass
 );
-
-console.log(`the name of bag in product array is ${allProducts[0].name}`);
-
-
-// call renderProducts() function that will display 3 random products
-
-// write event listener for the container of my images
-// when user clicks on an image in my container, call the handleProductClick() function
-// ex.: myContainer.addEventListener('click', handleProductClick());
-
 
 renderProducts();
 
