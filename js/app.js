@@ -278,3 +278,182 @@ function renderChart() {
   const myChart = new Chart(document.getElementById('myChart'), config);
 
 }
+
+
+/* Dropdown stuff and storing local data*/
+
+// GLOBAL VARIABLES
+// drink array
+let drinkOrder = [];
+
+// get dom elements of form and ul
+let coffeeForm = document.querySelector('form');
+let resultsList = document.querySelector('ul');
+
+// CONSTRUCTORS
+
+// make a new drink
+function Drink(name, drinkType, milk, size)
+{
+  this.name = name;
+  this.drinkType = drinkType;
+  this.milk = milk;
+  this.size = size;
+}
+
+// create a prototype function on our constructor to add LI with drink info
+
+// prototype syntax:
+// ObjectName.prototype.nameOfFunction = function()
+// {
+//   code goes here
+// }
+Drink.prototype.renderADrink = function()
+{
+  // code to make li elements to <ul>
+}
+
+// GLOBAL FUNCTIONS
+
+// helper function to make new drinks
+function makeADrink(name, drinkType, milk, size)
+{
+  // instantiate a new drink
+  let drinkObj = new Drink(name, drinkType, milk, size);
+
+  // push drink to array
+  drinkOrder.push(drinkObj);
+
+  // render list items with drink info
+  drinkObj.renderADrink();
+}
+
+
+function getDrinks()
+{
+  // check if drinks (order) is in storage
+  let potentialOrders = localStorage.getItem('orders');
+
+  // if no orders, order will be 'null'
+
+  // if there are drinks, we turn them back into objects
+  // will evaluate as a 'truthy' value in JS
+  if (potentialOrders)
+  {
+    // turn potential orders back into JS objects (POJOs)
+    let parsedOrders = JSON.parse(potentialOrders);
+    // parsed order returns an array of POJOs
+
+    // turned them back Drink objects AKA Reinstantiate
+
+
+    // declare 'order' instead of doing 'i' and stuff
+    // 'order' is the actual object we pass into the loop
+    // for of loop example:
+    for (let order of parsedOrders)
+    {
+      // makeADrink(name,drinkType,milk,size)
+
+      // extract the values from the POJOs
+      let name = order.name;
+      let drinkType = order.drinkType;
+      let milk = order.milk;
+      let size = order.size;
+
+      // pass the extracted values into our helper function that will reinstantiate the drink objects
+      makeADrink(name,drinkType,milk,size);
+    }
+  }
+
+  // if there are no drinks...:
+}
+
+// function to put drinks into local storage
+function storeDrinks()
+{
+  // KEY (label) to put things into local storage
+
+  // 'pack' items to put them into Local Storage
+  // use JSON.stringify() to turn it into a String
+  // 'orders' is they key
+
+  // stringify a copy of the drinkOrder array into a JSON string
+  let stringifiedOrders = JSON.stringify(drinkOrder);
+
+
+  // 'pack' (set) orders into localStorage
+  localStorage.setItem('orders', stringifiedOrders);
+}
+
+// EVENT HANDLER
+
+function handleSubmitForm(event)
+{
+  event.preventDefault();
+
+  // get customer's name from text input
+  let customerName = event.target.name.value;
+
+  // get customer's drink size from dropdown menu
+  let drinkType = event.target.drinkType.value;
+
+  // user input to make a drink object
+  makeADrink(customerName, drinkType);
+}
+
+// EXECUTABLE CODE
+coffeeForm.addEventListener('submit', handleSubmitForm);
+
+
+// LOCAL STORAGE
+// make coffee order persist
+// goal: if there are drink orders stored, load those drinks. if not, load the page to input drinks
+// in odd ducks: products will be stored
+/* timeline:
+
+  > user goes to the page
+
+  > check local storage for products
+    > (look for 'box' labeled "products" (-getItem()))
+    > if there are no products, generate products
+      > create new products
+    > if there are products: load those products
+      > unpack them > put them into product array
+    > alternatively, delete the old products from local storage
+      > delete old products, generate new products
+
+  > user reloads page
+    > The products are generated again! (oh no!)
+    > to avoid this
+
+  > user votes
+
+  > render results
+
+  > repack our localStorage box and add label tot he box "products"
+  > put it into storage (.set(item))
+*/
+
+// JSON
+/*
+  JSON is always in caps!
+
+  How to 'pack' items into LocalStorage:
+    JSON.stringify();
+      - turn JS into a JSON and then a String of JSON
+
+  How to 'unpack' items we retrieve from LocalStorage
+    JSON.parse();
+      - revert a JSON string back into JS
+      - by itself, .parse() will parse into POJOs
+        - to avoid this problem, we'll reinstantiate our parsed object
+
+POJO = Plain Old JavaScript Object
+
+reinstantiation:
+  - turn revert parsed string into an instance of the object
+
+  ODD DUCK NOTEs!
+  - look out for that one object that is a .png and how it plays with reinstantiating....?
+  - find a way to clear views and votes for objects from old sessions on page reload
+*/
