@@ -256,7 +256,8 @@ function renderChart()
         // the color of the background in the chart
         backgroundColor: getRandomColor(),
         // the color of the borders of each bar
-        borderColor: getRandomColor(),
+        // the border of each bar will refresh with a new color upon hover
+        borderColor: getRandomColor,
         // how wide the border is
         borderWidth: 1,
       },
@@ -264,7 +265,7 @@ function renderChart()
         label: 'Likes',
         data: productClicks,
         backgroundColor: getRandomColor(),
-        borderColor: getRandomColor(),
+        borderColor: getRandomColor,
         borderWidth: 1,
       }
     ]
