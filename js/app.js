@@ -85,6 +85,8 @@ function getOddProducts()
       let fileExtension = product.fileExtension;
       let timesClicked = product.timesClicked;
       let timesViewed = product.timesViewed;
+
+      // debug logs
       console.log(`parsed ${name}: ${product.name}`);
       console.log(`parsed ${fileExtension}:${product.fileExtension}`);
       console.log(`parsed ${timesClicked}:${product.timesClicked}`);
