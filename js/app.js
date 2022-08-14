@@ -39,8 +39,9 @@ function OddProduct(name, fileExtension, timesClicked, timesViewed) {
   this.name = name;
 
   // src for use in linking to the file in the img folder
-  this.src = `../img/${this.name}.${fileExtension}`;
+  this.src = `./img/${this.name}.${fileExtension}`;
 
+  this.fileExtension = fileExtension;
   // total times product has been clicked
   this.timesClicked = timesClicked;
 
